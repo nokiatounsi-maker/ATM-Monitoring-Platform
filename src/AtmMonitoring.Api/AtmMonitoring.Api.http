@@ -1,0 +1,6 @@
+@AtmMonitoring.Api_HostAddress = http://localhost:5028
+
+GET {{AtmMonitoring.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

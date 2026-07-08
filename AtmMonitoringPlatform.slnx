@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AtmMonitoring.Api/AtmMonitoring.Api.csproj" />
+    <Project Path="src/AtmMonitoring.Core/AtmMonitoring.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AtmMonitoring.Benchmarks/AtmMonitoring.Benchmarks.csproj" />
+    <Project Path="tests/AtmMonitoring.Tests/AtmMonitoring.Tests.csproj" />
+  </Folder>
+</Solution>
