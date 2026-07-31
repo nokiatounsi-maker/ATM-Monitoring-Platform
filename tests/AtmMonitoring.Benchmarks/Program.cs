@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+using BenchmarkDotNet.Running;
+using AtmMonitoring.Benchmarks;
+
+Console.WriteLine("Starting AtmMonitoring performance benchmarks...");
+BenchmarkRunner.Run<DictionaryBenchmarks>();

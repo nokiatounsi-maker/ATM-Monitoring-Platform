@@ -1,2 +1,15 @@
 namespace AtmMonitoring.Core;
-public class Atm { public string Id { get; set; } = string.Empty; public string Location { get; set; } = string.Empty; public AtmStatus Status { get; set; } public decimal CashBalance { get; set; } public DateTime LastMaintenance { get; set; } }
+
+/// <summary>
+/// Represents an Automated Teller Machine (ATM) in the monitoring system.
+/// This class is marked as 'sealed' to allow the JIT compiler to perform devirtualization optimizations,
+/// improving call site performance by removing virtual dispatch overhead where applicable.
+/// </summary>
+public sealed class Atm
+{
+    public string Id { get; set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
+    public AtmStatus Status { get; set; }
+    public decimal CashBalance { get; set; }
+    public DateTime LastMaintenance { get; set; }
+}
