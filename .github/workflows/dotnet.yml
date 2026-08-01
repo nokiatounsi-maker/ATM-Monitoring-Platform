@@ -1,0 +1,34 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore AtmMonitoringPlatform.slnx
+
+    - name: Build
+      run: dotnet build AtmMonitoringPlatform.slnx --no-restore -c ${{ matrix.configuration }}
+
+    - name: Test
+      run: dotnet test AtmMonitoringPlatform.slnx --no-build -c ${{ matrix.configuration }}
