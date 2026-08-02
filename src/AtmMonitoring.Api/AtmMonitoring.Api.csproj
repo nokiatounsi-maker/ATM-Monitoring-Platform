@@ -15,4 +15,11 @@
     <ProjectReference Include="..\AtmMonitoring.Core\AtmMonitoring.Core.csproj" />
   </ItemGroup>
 
+  <!-- Filter out Microsoft.AspNetCore.OpenApi.SourceGenerators to avoid compilation issues in .NET 8 -->
+  <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="ResolveAnalyzers;BeforeCompile;ResolveReferences">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="$([System.String]::new('%(Identity)').Contains('Microsoft.AspNetCore.OpenApi'))" />
+    </ItemGroup>
+  </Target>
+
 </Project>
