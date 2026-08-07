@@ -1,6 +1,15 @@
 using AtmMonitoring.Core;
+using AtmMonitoring.Api;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+
+// Register pre-compiled JSON Source Generation context to avoid reflection allocations during HTTP serialization.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.TypeInfoResolverChain.Insert(0, AtmJsonContext.Default);
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IAtmService, AtmService>();
