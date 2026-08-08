@@ -1,3 +1,7 @@
 ## 2024-05-23 - [Optimization of ATM lookup]
 **Learning:** In the `AtmService`, retrieving an ATM by its ID was using a `List<Atm>` with `FirstOrDefault(a => a.Id == id)`, resulting in O(N) complexity. For a large number of ATMs, this becomes a performance bottleneck in the API.
 **Action:** Replaced the internal `List<Atm>` with a `ConcurrentDictionary<string, Atm>`. This reduces the lookup complexity to O(1) and ensures thread-safety for status updates. Benchmarks showed a 99% reduction in lookup time for N=1000 (from ~14.4 us to ~25 ns).
+
+## 2026-08-08 - [ConcurrentDictionary.Values Snapshot Allocation and JSON Source Gen]
+**Learning:** Accessing `ConcurrentDictionary.Values` generates a full array copy of the values on the heap under the hood, causing high GC pressure during frequent list endpoints (linear scaling memory overhead, e.g., 8,080 B for 1000 items). Using a direct `yield return` iterator over the dictionary's KeyValuePairs completely avoids snapshots, maintaining a flat 112 B memory footprint. Additionally, default JSON serialization relies on slow runtime reflection with heap-allocated metadata, which is mitigated via System.Text.Json Source Generation.
+**Action:** Always use direct iterator loops or custom enumeration when returning collections from concurrent collections instead of `.Values`. Always configure JsonSerializerContext for key API models in Program.cs.
