@@ -1,6 +1,14 @@
+using AtmMonitoring.Api;
 using AtmMonitoring.Core;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+
+// Configure System.Text.Json source generation to eliminate reflection and heap allocations during serialization
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.TypeInfoResolverChain.Insert(0, AtmJsonContext.Default);
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IAtmService, AtmService>();
