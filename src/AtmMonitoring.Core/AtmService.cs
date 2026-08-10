@@ -9,7 +9,10 @@ public interface IAtmService
     void UpdateAtmStatus(string id, AtmStatus status);
 }
 
-public class AtmService : IAtmService
+/// <summary>
+/// Sealed class to enable JIT devirtualization optimizations for interface calls and avoid virtual dispatch.
+/// </summary>
+public sealed class AtmService : IAtmService
 {
     // Using ConcurrentDictionary for O(1) lookup and thread-safety
     private readonly ConcurrentDictionary<string, Atm> _atms = new();
@@ -20,7 +23,17 @@ public class AtmService : IAtmService
         _atms.TryAdd(initialAtm.Id, initialAtm);
     }
 
-    public IEnumerable<Atm> GetAllAtms() => _atms.Values;
+    /// <summary>
+    /// Returns all ATMs by iterating the dictionary directly.
+    /// This avoids calling _atms.Values, which allocates a snapshot collection.
+    /// </summary>
+    public IEnumerable<Atm> GetAllAtms()
+    {
+        foreach (var kvp in _atms)
+        {
+            yield return kvp.Value;
+        }
+    }
 
     public Atm? GetAtmById(string id) => _atms.TryGetValue(id, out var atm) ? atm : null;
 
