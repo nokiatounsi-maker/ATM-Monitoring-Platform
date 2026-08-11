@@ -15,4 +15,10 @@
     <ProjectReference Include="..\AtmMonitoring.Core\AtmMonitoring.Core.csproj" />
   </ItemGroup>
 
+  <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="$([System.String]::Copy('%(FileName)').Contains('Microsoft.AspNetCore.OpenApi.SourceGenerators'))" />
+    </ItemGroup>
+  </Target>
+
 </Project>
