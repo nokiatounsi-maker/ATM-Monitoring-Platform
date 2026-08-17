@@ -15,4 +15,11 @@
     <ProjectReference Include="..\AtmMonitoring.Core\AtmMonitoring.Core.csproj" />
   </ItemGroup>
 
+  <!-- Filter out OpenAPI source generators causing compatibility issues when targeting net8.0 with .NET 10 packages -->
+  <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)' == 'Microsoft.AspNetCore.OpenApi.SourceGenerators'" />
+    </ItemGroup>
+  </Target>
+
 </Project>

@@ -9,7 +9,11 @@ public interface IAtmService
     void UpdateAtmStatus(string id, AtmStatus status);
 }
 
-public class AtmService : IAtmService
+/// <summary>
+/// Service implementation for managing ATM state.
+/// Sealed to enable JIT devirtualization optimizations.
+/// </summary>
+public sealed class AtmService : IAtmService
 {
     // Using ConcurrentDictionary for O(1) lookup and thread-safety
     private readonly ConcurrentDictionary<string, Atm> _atms = new();
