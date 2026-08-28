@@ -1,12 +1,33 @@
+using System.Text.Json.Serialization;
 using AtmMonitoring.Core;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+
+// Configure System.Text.Json Source Generation to eliminate reflection overhead and heap allocations during serialization
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IAtmService, AtmService>();
+
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+// Source generator context for JSON serialization optimization
+[JsonSerializable(typeof(IEnumerable<Atm>))]
+[JsonSerializable(typeof(Atm))]
+[JsonSerializable(typeof(AtmStatus))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext
+{
+}
