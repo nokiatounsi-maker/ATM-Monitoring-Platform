@@ -1,12 +1,33 @@
+using AtmMonitoring.Api;
 using AtmMonitoring.Core;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+
+// Configure System.Text.Json Source Generator to eliminate reflection overhead during JSON serialization
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
+});
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonContext.Default);
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IAtmService, AtmService>();
+
 var app = builder.Build();
-if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
